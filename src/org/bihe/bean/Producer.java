@@ -33,14 +33,17 @@ public class Producer {
 	}
 	//-------------------------------------------------
 	public Demand sendAlarmToCoordinator(){
+		return null;
 		//TODO 
 	}
 	//-------------------------------------------------
 	public Demand moveToWareHouse(){
+		return null;
 		//TODO
 	}
 	//-------------------------------------------------
 	public Demand sendDirectlyToSalesMan(){
+		return null;
 		//TODO
 	}
 	//-------------------------------------------------
