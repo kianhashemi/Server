@@ -9,7 +9,4 @@ public class WarehouseKeeper extends Person {
 
 	}
 
-	public void mamad() {
-		
-	}
 }
