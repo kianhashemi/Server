@@ -35,8 +35,5 @@ public class Demand {
 		return super.toString();
 	}
 	
-	public void alaki(){
-	
-	}
 
 }
