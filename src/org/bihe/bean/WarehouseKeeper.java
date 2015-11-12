@@ -10,6 +10,7 @@ public class WarehouseKeeper extends Person {
 	}
 
 	public void mamad() {
-
+		String mamad="mamad";
+		
 	}
 }
