@@ -34,6 +34,8 @@ public class Demand {
 		// TODO Auto-generated method stub
 		return super.toString();
 	}
-
+public static void alaki(){
+	
+}
 	
 }
