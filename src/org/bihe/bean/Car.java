@@ -4,13 +4,13 @@ public class Car {
 	// -------------------------------------------------------------
 	// ------------------Instance Fields----------------------------
 	private String color;
-	private String model;
+	private CarID model;
 	private String cost;
 	private String id;
 
 	// -------------------------------------------------------------
 	// ------------------Constructor--------------------------------
-	public Car(String color, String model, String cost, String id) {
+	public Car(String color, CarID model, String cost, String id) {
 		super();
 		this.color = color;
 		this.model = model;
@@ -28,11 +28,11 @@ public class Car {
 		this.color = color;
 	}
 
-	public String getModel() {
+	public CarID getModel() {
 		return model;
 	}
 
-	public void setModel(String model) {
+	public void setModel(CarID model) {
 		this.model = model;
 	}
 
