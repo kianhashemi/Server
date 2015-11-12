@@ -2,51 +2,132 @@ package org.bihe.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
-public class Producer {
-	
-	//-------------------------------------------------
-	//-------------Instance Fields---------------------
+public class Producer extends Person implements Runnable{
+
+	// -------------------------------------------------
+	// -------------Instance Fields---------------------
 	private ArrayList<ProductionLine> productionLines;
 	private ArrayList<Car> stockCars;
+	private ArrayList<Thread> productionLinesThreads;
 	private int stockSize;
 	private int freeSpace;
-	private HashMap<String, Integer> cars;
+	private WareHouse innerWareHouse;
+	private String ID;
+	// -------------------------------------------------
 	
-	//-------------------------------------------------
-	//--------------Constructors-----------------------
 	
-	
-	//-------------------------------------------------
-	//----------------Methods--------------------------
-	public void addProductLine(ProductionLine productionLine){
+
+	// -------------------------------------------------
+	// --------------Constructors-----------------------
+	public Producer(String firstName, String lastName, String username,
+			String password, int stockSize) {
+		super(firstName, lastName, username, password);
+		this.stockSize = stockSize;
+		this.freeSpace = this.stockSize;
+		generateID();
+
+	}
+
+	// -------------------------------------------------
+	// ----------------Methods--------------------------
+	public void addProductionLine(ProductionLine productionLine) {
 		productionLines.add(productionLine);
+		Thread thread = new Thread(productionLine);
+		productionLinesThreads.add(thread);
 	}
-	//-------------------------------------------------
-	private void countCar(){
-		//TODO arayeyey mashin ha ra gerefte va bar asase model, shomaresh 
-		// va dakhele hashmap gharar midahad
+
+	// -------------------------------------------------
+	private void setCarsToInnerWareHouse() {
+		HashMap<CarID, Integer> IWH = new HashMap<>();
+		for (ProductionLine pl : productionLines) {
+			for(int i=0;i<pl.getCarTypes().size();i++){
+				IWH.put(pl.getCarTypes().get(i).getModel(), 0);
+			}
+		}
 	}
-	//-------------------------------------------------
-	public void addCarToStock(Car car){
-		//TODO add produced car to stock
+
+	// -------------------------------------------------
+	private void countCar() {
+		for(Car c:stockCars){
+			for(CarID cid:innerWareHouse.getCars().keySet()){
+				if(c.getModel().equals(cid)){
+					innerWareHouse.getCars().put(cid,innerWareHouse.getCars().get(cid)+1 );
+				}
+			}
+		}
 	}
-	//-------------------------------------------------
-	public Demand sendAlarmToCoordinator(){
+
+	// -------------------------------------------------
+	public void addCarToStock(Car car) {
+		stockCars.add(car);
+	}
+
+	// -------------------------------------------------
+	private void generateID(){
+		  Random rn = new Random(); 
+		  int random =rn.nextInt(10000);
+		  this.ID = "Producer " + random;
+	}
+	// -------------------------------------------------
+	public Demand sendAlarmToCoordinator() {
 		return null;
-		//TODO 
+		// TODO
 	}
-	//-------------------------------------------------
-	public Demand moveToWareHouse(){
+
+	// -------------------------------------------------
+	public Demand moveToWareHouse() {
 		return null;
+		// TODO
+	}
+
+	// -------------------------------------------------
+	public Demand sendDirectlyToSalesMan() {
+		return null;
+		// TODO
+	}
+
+	// -------------------------------------------------
+	@Override
+	public void run() {
+		for(Thread t:productionLinesThreads){
+			t.start();
+		}
 		//TODO
+		
 	}
-	//-------------------------------------------------
-	public Demand sendDirectlyToSalesMan(){
-		return null;
-		//TODO
+	
+	// -------------------------------------------------
+	// -----------Getters And Setters-------------------
+	public ArrayList<ProductionLine> getProductionLines() {
+		return productionLines;
 	}
-	//-------------------------------------------------
+
+	public ArrayList<Car> getStockCars() {
+		return stockCars;
+	}
+
+	public int getStockSize() {
+		return stockSize;
+	}
+
+	public int getFreeSpace() {
+		return freeSpace;
+	}
+
+	public WareHouse getInnerWareHouse() {
+		return innerWareHouse;
+	}
+
+	public String getID() {
+		return ID;
+	}
+
+	public void setFreeSpace(int freeSpace) {
+		this.freeSpace = freeSpace;
+	}
+
 	
 
 }
