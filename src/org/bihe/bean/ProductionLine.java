@@ -1,8 +1,10 @@
 package org.bihe.bean;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ProductionLine implements Runnable {
+	private static Producer producer;
 	private ArrayList<Car> carTypes; 
 	private int produceTime;
 	private String ID;
@@ -36,23 +38,31 @@ public class ProductionLine implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+	try {
+		Thread.sleep(produceTime);
+		producer.addCarToStock(produceCar());
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 		
 	}
 	//Will produce a Car
 	public Car produceCar(){
-		
-		return null;
-		
+		Random rn = new Random(); 
+	int random =rn.nextInt(carTypes.size());
+	
+	return carTypes.get(random);
+			
 	}
 	
-	//Will Add a car to the list of production line 
+	//Will Add a car to the list of production line //UI Handling 
 	public void addCar(){
 		
 	}
-	//Generate ID
+	//Generate ID Should be called after creating the production line
 	public void IDgenerator(){
-		
+	this.ID="producerID"+this.carTypes.get(0).getModel();
 	}
 	
 	//Will Check Free Space Of Inner Warehouse
