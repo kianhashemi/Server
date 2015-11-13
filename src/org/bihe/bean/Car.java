@@ -7,6 +7,7 @@ public class Car {
 	private CarID model;
 	private String cost;
 	private String id;
+	private int alaki;
 
 	// -------------------------------------------------------------
 	// ------------------Constructor--------------------------------
