@@ -3,7 +3,7 @@ package org.bihe.bean;
 import java.util.ArrayList;
 
 public class Administrator {
-	
+	private String kian="Kian";
 	// -------------------------------------------------------------
 	// ------------------Instance Fields----------------------------
 	private Coordinator co;
