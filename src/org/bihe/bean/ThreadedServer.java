@@ -10,7 +10,7 @@ public class ThreadedServer implements Runnable {
 	private Socket newclient;
 	private int counter;
 
-	public ThreadedServer(Socket newclient, int counter) {
+	public ThreadedServer(Socket newclient) {
 		this.newclient = newclient;
 		this.counter=counter;
 	}

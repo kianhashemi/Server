@@ -4,20 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class Producer extends Person implements Runnable{
+public class Producer extends Person implements Runnable {
 
 	// -------------------------------------------------
 	// -------------Instance Fields---------------------
 	private ArrayList<ProductionLine> productionLines;
-	private ArrayList<Car> stockCars;
+	private static ArrayList<Car> stockCars;
 	private ArrayList<Thread> productionLinesThreads;
 	private int stockSize;
 	private int freeSpace;
 	private WareHouse innerWareHouse;
-	private String ID;
+	private static String ID;
+
 	// -------------------------------------------------
-	
-	
 
 	// -------------------------------------------------
 	// --------------Constructors-----------------------
@@ -42,7 +41,7 @@ public class Producer extends Person implements Runnable{
 	private void setCarsToInnerWareHouse() {
 		HashMap<CarID, Integer> IWH = new HashMap<>();
 		for (ProductionLine pl : productionLines) {
-			for(int i=0;i<pl.getCarTypes().size();i++){
+			for (int i = 0; i < pl.getCarTypes().size(); i++) {
 				IWH.put(pl.getCarTypes().get(i).getModel(), 0);
 			}
 		}
@@ -50,26 +49,45 @@ public class Producer extends Person implements Runnable{
 
 	// -------------------------------------------------
 	private void countCar() {
-		for(Car c:stockCars){
-			for(CarID cid:innerWareHouse.getCars().keySet()){
-				if(c.getModel().equals(cid)){
-					innerWareHouse.getCars().put(cid,innerWareHouse.getCars().get(cid)+1 );
+		for (Car c : stockCars) {
+			for (CarID cid : innerWareHouse.getCars().keySet()) {
+				if (c.getModel().equals(cid)) {
+					innerWareHouse.getCars().put(cid,
+							innerWareHouse.getCars().get(cid) + 1);
 				}
 			}
 		}
 	}
 
 	// -------------------------------------------------
-	public void addCarToStock(Car car) {
+	public static void addCarToStock(Car car) {
 		stockCars.add(car);
 	}
 
 	// -------------------------------------------------
-	private void generateID(){
-		  Random rn = new Random(); 
-		  int random =rn.nextInt(10000);
-		  this.ID = "Producer " + random;
+	private void generateID() {
+		Random rn = new Random();
+		int random = rn.nextInt(10000);
+		this.ID = "Producer " + random;
 	}
+
+	// -------------------------------------------------
+	private boolean checkingInnerWareHouseCapacity() {
+		boolean checkingAlarm = false;
+		if (!checkingAlarm) {
+			if (stockCars.size() > (int) (0.8 * stockSize)) {
+				checkingAlarm=true;
+				//TODO send alarm
+				return false;
+			}
+		}else{
+			if(stockCars.size()==stockSize){
+				//TODO stop production
+			}
+		}
+		return false;
+	}
+
 	// -------------------------------------------------
 	public Demand sendAlarmToCoordinator() {
 		return null;
@@ -91,13 +109,13 @@ public class Producer extends Person implements Runnable{
 	// -------------------------------------------------
 	@Override
 	public void run() {
-		for(Thread t:productionLinesThreads){
+		for (Thread t : productionLinesThreads) {
 			t.start();
 		}
-		//TODO
-		
+		// TODO
+
 	}
-	
+
 	// -------------------------------------------------
 	// -----------Getters And Setters-------------------
 	public ArrayList<ProductionLine> getProductionLines() {
@@ -120,14 +138,12 @@ public class Producer extends Person implements Runnable{
 		return innerWareHouse;
 	}
 
-	public String getID() {
+	public static String getID() {
 		return ID;
 	}
 
 	public void setFreeSpace(int freeSpace) {
 		this.freeSpace = freeSpace;
 	}
-
-	
 
 }
