@@ -1,6 +1,12 @@
 package org.bihe.bean;
 
-public class Person {
+import java.io.Serializable;
+
+import org.bihe.service.HandleCommand;
+import org.bihe.service.Service;
+
+public class Person implements Serializable{
+	private static final long serialVersionUID = 6343348990555370081L;
 	// -------------------------------------------------------------
 	// ------------------Instance Fields----------------------------
 
@@ -53,6 +59,13 @@ public class Person {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Service loginUser(Person person) {
+		//TODO checking file
+		System.out.println("Username: " + person.getUsername()
+				+ "    password: " + person.getPassword());
+		return null;
 	}
 
 }

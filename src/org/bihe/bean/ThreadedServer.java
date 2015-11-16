@@ -4,15 +4,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
+import org.bihe.service.HandleCommand;
+import org.bihe.service.Service;
 
 public class ThreadedServer implements Runnable {
 	private Socket newclient;
 	private int counter;
+	private Service s;
+	private Object obj;
+	private HandleCommand hc;
+	private Person p;
 
 	public ThreadedServer(Socket newclient) {
 		this.newclient = newclient;
-		this.counter=counter;
+		this.counter = counter;
+		
 	}
 
 	@Override
@@ -20,8 +28,13 @@ public class ThreadedServer implements Runnable {
 		try {
 			InputStream is = newclient.getInputStream();
 			ObjectInputStream ios = new ObjectInputStream(is);
-			String hi = (String) ios.readObject();
-			System.out.println(hi);
+			System.out.println("object about to receving...");
+			hc=(HandleCommand)( ios.readObject());
+			
+			System.out.println("Object recieved.");
+			obj=(Object)(hc.getObject());
+			s=(Service)(hc.getService());
+			s.execute(obj);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
