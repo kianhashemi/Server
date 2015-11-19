@@ -25,42 +25,78 @@ public class Coordinator extends Person implements Runnable {
 
 	}
 
-	
-
 	// -------------------------------------------
 	// Methods
 
 	// This is were Every Handle Thing about Alarm will gather
 	public void respondingToAlarm(Demand request) {
-		if(checkingAlarmQueue()){
+		if (checkingAlarmQueue()) {
 			checkingAlarmDemand(request);
 			checkinWareHouseFreeSpaces();
-			determiningOneWareHouseFreeSpaceForMovingCars(request);
-			
-			
-		}else{
+			if (!determiningOneWareHouseFreeSpaceForMovingCars(request)) {
+				if (!determiningAllWareHouseFreeSpacesForMovingCars()) {
+					addToWHTPQueue(request);
+				}
+			}
+		} else {
 			addToWHTPQueue(request);
 		}
-
 	}
+
 	// ---------------------------------------
 	// Will Check out WareHouse Free Space
 	public void checkinWareHouseFreeSpaces() {
-		for(WareHouse wh:wareHouseStock){
+		for (WareHouse wh : wareHouseStock) {
 			freeSpaces.put(wh.getId(), wh.getFreeSpace());
 		}
 	}
+
 	// ---------------------------------------
-	private boolean determiningOneWareHouseFreeSpaceForMovingCars(Demand request){
-		boolean check=false;
-		for(String id:freeSpaces.keySet()){
-			if(freeSpaces.get(id)>=waitingCarsToMove){
-				//TODO
-				check=true;
+	private boolean determiningOneWareHouseFreeSpaceForMovingCars(Demand request) {
+		boolean check = false;
+		for (String id : freeSpaces.keySet()) {
+			if (freeSpaces.get(id) >= waitingCarsToMove) {
+				movingCarFromProducerToOneWareHouse(request, id);
+				check = true;
 				break;
 			}
 		}
 		return check;
+	}
+
+	// ---------------------------------------
+	private void movingCarFromProducerToOneWareHouse(Demand request, String id) {
+		HashMap<String, HashMap<CarID, Integer>> movingcars = new HashMap<>();
+		movingcars.put(id, request.getListOfCar());
+		// TODO handle it
+	}
+
+	// ---------------------------------------
+	private boolean determiningAllWareHouseFreeSpacesForMovingCars() {
+		boolean check = false;
+		int allFreeSapces = 0;
+		for (String id : freeSpaces.keySet()) {
+			allFreeSapces = allFreeSapces + freeSpaces.get(id);
+		}
+		if (allFreeSapces >= waitingCarsToMove) {
+			// TODO
+			check = true;
+		}
+		return check;
+	}
+
+	// ---------------------------------------
+	private void movingCarsFromProducerToSeveralWareHouses(Demand request){
+		HashMap<String, HashMap<CarID, Integer>> movingcars = new HashMap<>();
+		HashMap<CarID, Integer> cars=new HashMap<>();
+		int fs=0;
+		for(String id:freeSpaces.keySet()){
+			cars.clear();
+			fs=freeSpaces.get(id);
+			while(fs!=0){
+			
+			}
+		}
 	}
 	// ---------------------------------------
 	// This is were Transportation complete
@@ -68,22 +104,26 @@ public class Coordinator extends Person implements Runnable {
 
 		return false;
 	}
+
 	// ---------------------------------------
 	// Will Add a Demand To The QUEUE
 	public void addToWHTPQueue(Demand request) {
 		WHTP.add(request);
 	}
+
 	// ---------------------------------------
 	// Will Add a Demand To The QUEUE
 	public void addToSellTPQueue(Demand request) {
 		sellTP.add(request);
 	}
+
 	// ---------------------------------------
 	// Will delete The Demand which is handled or changed
 	public boolean deleteDemand(Demand request) {
 
 		return false;
 	}
+
 	// ---------------------------------------
 	// This Method were every thing about sending to salesman gather
 	public boolean respondingToSellRequest(Demand request) {
@@ -91,6 +131,7 @@ public class Coordinator extends Person implements Runnable {
 		return false;
 
 	}
+
 	// ---------------------------------------
 	// Count available Cars
 	public HashMap<CarID, Integer> countingWhAvailableCars(
@@ -99,36 +140,41 @@ public class Coordinator extends Person implements Runnable {
 		return null;
 
 	}
+
 	// ---------------------------------------
 	// IMPORTANT
 	public void checkingAlarmDemand(Demand request) {
-		waitingCarsToMove=0;
-		for(CarID cid:request.getListOfCar().keySet()){
-			waitingCarsToMove=waitingCarsToMove+request.getListOfCar().get(cid);
+		waitingCarsToMove = 0;
+		for (CarID cid : request.getListOfCar().keySet()) {
+			waitingCarsToMove = waitingCarsToMove
+					+ request.getListOfCar().get(cid);
 		}
-		
+
 	}
+
 	// ---------------------------------------
-	
+
 	// ---------------------------------------
 	// ye kelas besazim vorodie ino return kone
 	public boolean moveToSalesMan(
 			HashMap<String, HashMap<CarID, Integer>> carSent) {
 		return false;
 	}
+
 	// ---------------------------------------
 	public boolean checkingAlarmQueue() {
 		if (!(WHTP.size() == 0)) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
+
 	// ---------------------------------------
-	public void checkingSaleQueue(){
-		
+	public void checkingSaleQueue() {
+
 	}
-	
+
 	// ---------------------------------------
 	// Getters And Setters
 	public Queue<Demand> getSellTP() {
