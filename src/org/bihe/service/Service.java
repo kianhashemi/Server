@@ -6,6 +6,9 @@ import org.bihe.bean.Person;
 
 public interface Service extends Serializable {
 	static final long serialVersionUID = 7245560613798191609L;
-	Service execute(Object object);
 
+
+	public void execute();
+
+	
 }

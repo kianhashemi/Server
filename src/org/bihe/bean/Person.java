@@ -61,11 +61,11 @@ public class Person implements Serializable{
 		this.password = password;
 	}
 
-	public Service loginUser(Person person) {
+	public void loginUser(Person person) {
 		//TODO checking file
 		System.out.println("Username: " + person.getUsername()
 				+ "    password: " + person.getPassword());
-		return null;
+		
 	}
 
 }

@@ -8,8 +8,8 @@ public class ProductionLine implements Runnable {
 	private int produceTime;
 	private String ID;
 
-	public ProductionLine() {
-		// TODO Auto-generated constructor stub
+	public ProductionLine(int produceTime) {
+		this.produceTime = produceTime;
 		IDgenerator();
 	}
 
@@ -45,8 +45,13 @@ public class ProductionLine implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(produceTime * 1000);
-			Producer.addCarToStock(produceCar());
+			while (Producer.checkingFreeSpace()) {
+				Producer.reduceFreeSpace();
+				Thread.sleep(produceTime * 1000);
+				Producer.addCarToStock(produceCar());
+				Producer.checkingInnerWareHouseCapacity();
+				
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,6 +59,7 @@ public class ProductionLine implements Runnable {
 
 	}
 
+	// ------------------------------------------------------------------
 	// Will produce a Car
 	public Car produceCar() {
 		Random rn = new Random();
@@ -62,16 +68,19 @@ public class ProductionLine implements Runnable {
 
 	}
 
+	// ------------------------------------------------------------------
 	// Will Add a car to the list of production line //UI Handling
 	public void addCar() {
 
 	}
 
+	// ------------------------------------------------------------------
 	// Generate ID Should be called after creating the production line
 	public void IDgenerator() {
 		this.ID = Producer.getID() + this.carTypes.get(0).getModel();
 	}
 
+	// ------------------------------------------------------------------
 	// Will Check Free Space Of Inner Warehouse
 	public boolean checkFreeSpace() {
 
@@ -79,6 +88,7 @@ public class ProductionLine implements Runnable {
 
 	}
 
+	// ------------------------------------------------------------------
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub

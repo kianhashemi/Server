@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.bihe.service.HandleCommand;
+
 public class Producer extends Person implements Runnable {
 
 	// -------------------------------------------------
 	// -------------Instance Fields---------------------
+	private static int iDNumber;
 	private ArrayList<ProductionLine> productionLines;
 	private static ArrayList<Car> stockCars;
 	private ArrayList<Thread> productionLinesThreads;
-	private int stockSize;
-	private int freeSpace;
-	private WareHouse innerWareHouse;
+	private static int stockSize;
+	private static int freeSpace;
+	private static WareHouse innerWareHouse;
 	private static String ID;
 
 	// -------------------------------------------------
@@ -26,6 +29,7 @@ public class Producer extends Person implements Runnable {
 		this.stockSize = stockSize;
 		this.freeSpace = this.stockSize;
 		generateID();
+		innerWareHouse = new WareHouse( null, stockSize);
 
 	}
 
@@ -66,43 +70,91 @@ public class Producer extends Person implements Runnable {
 
 	// -------------------------------------------------
 	private void generateID() {
-		Random rn = new Random();
-		int random = rn.nextInt(10000);
-		this.ID = "Producer " + random;
+
+		this.ID = "Producer " + iDNumber;
 	}
 
 	// -------------------------------------------------
-	private boolean checkingInnerWareHouseCapacity() {
+	public static void checkingInnerWareHouseCapacity() {
 		boolean checkingAlarm = false;
 		if (!checkingAlarm) {
 			if (stockCars.size() > (int) (0.8 * stockSize)) {
-				checkingAlarm=true;
-				//TODO send alarm
-				return false;
+				checkingAlarm = true;
+				sendAlarmToCoordinator();
 			}
-		}else{
-			if(stockCars.size()==stockSize){
-				//TODO stop production
+		} else {
+			if (stockCars.size() == stockSize) {
+				// TODO stop production
 			}
 		}
-		return false;
+
 	}
 
 	// -------------------------------------------------
-	public Demand sendAlarmToCoordinator() {
-		return null;
+	public static boolean checkingFreeSpace() {
+		if (freeSpace == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	// -------------------------------------------------
+	public static void reduceFreeSpace() {
+		freeSpace = freeSpace - 1;
+	}
+
+	// -------------------------------------------------
+	public static void sendAlarmToCoordinator() {
+		Demand demand = new Demand(getID(), innerWareHouse.getCars());
+		HandleCommand.sendAlarmToCoordinator(demand);
+
 		// TODO
 	}
 
 	// -------------------------------------------------
-	public Demand moveToWareHouse() {
-		return null;
-		// TODO
+	public void moveToWareHouse(
+			HashMap<String, HashMap<CarID, Integer>> movingCars) {
+
+		for (String id : movingCars.keySet()) {
+			deletingCarsFromInnerWareHouse(movingCars.get(id));
+			deletingMovingCarsFromStockCars(movingCars.get(id));
+		}
 	}
 
 	// -------------------------------------------------
-	public Demand sendDirectlyToSalesMan() {
-		return null;
+	private void deletingCarsFromInnerWareHouse(
+			HashMap<CarID, Integer> movingCars) {
+		for (CarID cid : innerWareHouse.getCars().keySet()) {
+			for (CarID cidd : movingCars.keySet()) {
+				if (cid.equals(cidd)) {
+					innerWareHouse.getCars().put(
+							cid,
+							innerWareHouse.getCars().get(cid)
+									- movingCars.get(cidd));
+				}
+			}
+		}
+	}
+
+	// -------------------------------------------------
+	private void deletingMovingCarsFromStockCars(
+			HashMap<CarID, Integer> movingCars) {
+		for (CarID cid : movingCars.keySet()) {
+			for (int i = 0; i < movingCars.get(cid); i++) {
+				for (int j = 0; j < stockCars.size(); j++) {
+					if (stockCars.get(j).getModel().equals(cid)) {
+						stockCars.remove(j);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	// -------------------------------------------------
+	public void sendDirectlyToSalesMan() {
+		
 		// TODO
 	}
 

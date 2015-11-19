@@ -3,6 +3,7 @@ package org.bihe.service.entityService;
 import java.io.Serializable;
 
 import org.bihe.bean.Person;
+import org.bihe.service.HandleCommand;
 import org.bihe.service.Service;
 
 public class Login implements Service, Serializable{
@@ -18,9 +19,11 @@ public class Login implements Service, Serializable{
 		this.person = person;
 	}
 
+
 	@Override
-	public Service execute(Object person) {
-		return this.person.loginUser((Person)person);
+	public void execute() {
+		// TODO Auto-generated method stub
+		HandleCommand.login(person);
 	}
 
 }

@@ -7,8 +7,9 @@ public class Demand {
 	private String ID;
 	private HashMap<CarID, Integer> listOfCar;
 	
-	public Demand() {
-		// TODO Auto-generated constructor stub
+	public Demand(String id,HashMap<CarID, Integer> listofCars) {
+		this.ID=id;
+		this.listOfCar=listofCars;
 	}
 
 	public String getID() {

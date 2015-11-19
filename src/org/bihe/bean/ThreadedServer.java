@@ -29,12 +29,10 @@ public class ThreadedServer implements Runnable {
 			InputStream is = newclient.getInputStream();
 			ObjectInputStream ios = new ObjectInputStream(is);
 			System.out.println("object about to receving...");
-			hc=(HandleCommand)( ios.readObject());
+			s=(Service)( ios.readObject());
 			
 			System.out.println("Object recieved.");
-			obj=(Object)(hc.getObject());
-			s=(Service)(hc.getService());
-			s.execute(obj);
+			s.execute();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
